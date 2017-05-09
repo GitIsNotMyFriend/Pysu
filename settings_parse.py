@@ -19,7 +19,6 @@ def parse(dir):
 
 
 def default_data(file):
-    settings_file = open(dir + "\settings.data" , 'w')
-    settings_file.write("fullscreen: True")
-
+    settings_file = open(file, 'w')
+    settings_file.writelines(["fullscreen: 1\n", "width: 600\n", "height: 480\n"])
     settings_file.close()
