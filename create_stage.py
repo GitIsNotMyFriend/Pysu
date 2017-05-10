@@ -10,3 +10,12 @@ def key_image_file(col):
     key_image = result[0]
 
     return basedir + "\\noteskin\\" + key_image + ".png"
+
+def keypressed_image_file(col):
+    skin_file = open(basedir + "\\noteskin\\skin.ini", "r")
+    data= skin_file.read()
+    reg = re.compile(r"KeyImage%dD: (\w+\\\w+)" % col, re.MULTILINE)
+    result = reg.findall(data)
+    key_image = result[0]
+
+    return basedir + "\\noteskin\\" + key_image + ".png"

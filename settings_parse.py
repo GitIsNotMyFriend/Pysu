@@ -20,5 +20,5 @@ def parse(dir):
 
 def default_data(file):
     settings_file = open(file, 'w')
-    settings_file.writelines(["fullscreen: 1\n", "width: 600\n", "height: 480\n"])
+    settings_file.writelines(["fullscreen: 1\n", "width: 600\n", "height: 480\n", "keys: 120,99,46,47\n"])
     settings_file.close()
