@@ -14,12 +14,6 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-# Python compilers
-*.pyc
-
-# Idea
-*idea.
-
 # Windows shortcuts
 *.lnk
 
@@ -51,3 +45,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+./idea
+*.pyc
