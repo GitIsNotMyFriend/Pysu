@@ -112,16 +112,13 @@ def main():
             image = pygame.transform.smoothscale(image, (int(ratio * original_width), int(ratio * original_height)))
             game_display.blit(image, (info_object.current_w / 2 - original_width * ratio * 4 / 2 + i * original_width * ratio, -50))
 
-        print arrow_images
         for i, arrow in enumerate(arrow_images):
             width, height = arrow.get_size()
             arrow = pygame.transform.smoothscale(arrow, (int(width * ratio * 0.8), int(height * ratio * 0.8)))
-            game_display.blit(arrow, (5 + info_object.current_w / 2 - original_width * 2 + original_width * ratio * (ARROWS[i].get_column() - 1), 595 - 192 * ARROWS[i].get_time() / 1000.0 * SCROLL_SPEED + pygame.time.get_ticks() / 1000.0 * SCROLL_SPEED * 592.0 / 192))
+            game_display.blit(arrow, (info_object.current_w / 2 - original_width * ratio * 2 + original_width * ratio * (ARROWS[i].get_column() - 1), 595 - 192 * ARROWS[i].get_time() / 1000.0 * SCROLL_SPEED + pygame.time.get_ticks() / 1000.0 * SCROLL_SPEED / 10 * 192.0))
 
         # Update game and tick game
-        print pygame.time.get_ticks()
         pygame.display.update()
-        pygame.display.flip()
         clock.tick(144)
 
 # Call main
