@@ -2,26 +2,30 @@
 # -*- coding: UTF-8 -*-
 
 import os
-import sys
+import beatmap_metadata
 import settings_parse
 import pygame
 import create_stage
 import arrow_object
+import random
 
 NAME = "Pysu!"
 VERSION = "0.01-ALPHA"
 SCROLL_SPEED = 29
 
-# Game arrows
-ARROWS = [
-    arrow_object.arrowObject(192, 192, 0, 1, 0),
-    arrow_object.arrowObject(92, 192, 234, 1, 0),
-    arrow_object.arrowObject(448, 192, 0, 1, 0)
-]
-
 # Directories of files
 basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 beatmaps = os.path.abspath(os.path.join(os.path.dirname(__file__), 'beatmaps'))
+
+# Choose a random beatmap
+beatmap_list = beatmap_metadata.beatmap_list(beatmaps)
+chosen_beatmap = os.path.join(beatmaps, os.path.abspath(random.choice(beatmap_list)))
+beatmap_data = beatmap_metadata.parse_metadata(chosen_beatmap)
+
+ARROWS = beatmap_data.arrows
+
+
+
 
 # Create dir if doesn't exist (used to generate default settings)
 if not os.path.isdir(basedir):
@@ -31,10 +35,12 @@ if not os.path.isdir(basedir):
 def draw_arrows(arrows):
     """Draw arrows to screen"""
     arrow_images = []
-    for arrow in arrows:
-        image_dir = arrow_object.arrow_skin(arrow.get_column())
-        arrow_image = pygame.image.load(image_dir)
-        arrow_images.append(arrow_image)
+    for i, arrow in enumerate(arrows):
+        arrow_y = 595 - 192 * arrow.get_time() / 1000.0 * SCROLL_SPEED + pygame.time.get_ticks() / 1000.0 * SCROLL_SPEED * 592.0 / 192.0
+        if abs(arrow.get_time() - pygame.time.get_ticks()) < 1500:
+            image_dir = os.path.abspath(arrow_object.arrow_skin(arrow.get_column()))
+            arrow_image = pygame.image.load(image_dir)
+            arrow_images.append([i, arrow_image])
     return arrow_images
 
 
@@ -63,7 +69,13 @@ def main():
     # Set game clock
     clock = pygame.time.Clock()
 
+    # Init pygame mixer
+    pygame.mixer.init()
+    pygame.mixer.music.load(beatmap_data.audio)
+    pygame.mixer.music.play(-1)
+
     # Set game display (determine fullscreen mode according to settings)
+    global info_object
     info_object = pygame.display.Info()
     if bool(int(settings["fullscreen"])):
         os.environ['SDL_VIDEO_WINDOW_POS'] = '1'
@@ -106,22 +118,28 @@ def main():
                 keyImages[KEYS.index(key)] = pygame.image.load(file)
 
         # Draw images of keys
+
         for i, image in enumerate(keyImages):
             original_width, original_height = image.get_size()
             ratio = float(info_object.current_h) / original_height
             image = pygame.transform.smoothscale(image, (int(ratio * original_width), int(ratio * original_height)))
             game_display.blit(image, (info_object.current_w / 2 - original_width * ratio * 4 / 2 + i * original_width * ratio, -50))
 
-        for i, arrow in enumerate(arrow_images):
-            width, height = arrow.get_size()
-            arrow = pygame.transform.smoothscale(arrow, (int(width * ratio * 0.8), int(height * ratio * 0.8)))
-            game_display.blit(arrow, (info_object.current_w / 2 - original_width * ratio * 2 + original_width * ratio * (ARROWS[i].get_column() - 1), 595 - 192 * ARROWS[i].get_time() / 1000.0 * SCROLL_SPEED + pygame.time.get_ticks() / 1000.0 * SCROLL_SPEED / 10 * 192.0))
+        for arrow in arrow_images:
+            arrow_image = arrow[1]
+            arrow_index = arrow[0]
+            width, height = arrow_image.get_size()
+            arrow_y = 592 + 192 * (pygame.time.get_ticks() - ARROWS[arrow_index].get_time()) / 1000.0 * 5
+            print arrow_index
+            arrow_x = 5 + info_object.current_w / 2 - original_width * ratio * 2 + original_width * ratio * (ARROWS[arrow[0]].get_column() - 1)
+            arrow_image = pygame.transform.smoothscale(arrow_image, (int(width * ratio * 0.8), int(height * ratio * 0.8)))
+            game_display.blit(arrow_image, (arrow_x,arrow_y))
 
         # Update game and tick game
         pygame.display.update()
-        clock.tick(144)
+        pygame.display.flip()
+        clock.tick(60)
 
 # Call main
 if __name__ == '__main__':
     main()
-
