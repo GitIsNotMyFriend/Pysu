@@ -13,9 +13,6 @@ NAME = "Pysu!"
 VERSION = "0.01-ALPHA"
 SCROLL_SPEED = 29
 
-# Game arrows
-ARROWS = []
-
 # Directories of files
 basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 beatmaps = os.path.abspath(os.path.join(os.path.dirname(__file__), 'beatmaps'))
@@ -132,7 +129,7 @@ def main():
             arrow_image = arrow[1]
             arrow_index = arrow[0]
             width, height = arrow_image.get_size()
-            arrow_y = 592 + 192 * (pygame.time.get_ticks() - ARROWS[arrow_index].get_time()) / 1000.0 * SCROLL_SPEED / 5
+            arrow_y = 592 + 192 * (pygame.time.get_ticks() - ARROWS[arrow_index].get_time()) / 1000.0 * 5
             print arrow_index
             arrow_x = 5 + info_object.current_w / 2 - original_width * 2 + original_width * ratio * (ARROWS[arrow[0]].get_column() - 1)
             arrow_image = pygame.transform.smoothscale(arrow_image, (int(width * ratio * 0.8), int(height * ratio * 0.8)))

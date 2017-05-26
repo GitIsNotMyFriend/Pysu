@@ -3,7 +3,6 @@ WIDTH = 512
 
 
 class arrowObject(object):
-
     def __init__(self, x, y, time, hit_type, hit_end):
         self.x = x
         self.y = y
@@ -21,7 +20,6 @@ class arrowObject(object):
 
 
 def arrow_skin(column):
-    FORMAT = "data/noteskin/Arrownote/%s.png"
     if column == 1:
         file_open = "left"
     if column == 2:
@@ -31,4 +29,4 @@ def arrow_skin(column):
     if column == 4:
         file_open = "right"
 
-    return FORMAT % file_open
+    return "data/noteskin/Arrownote/%s.png" % file_open
