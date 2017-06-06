@@ -23,7 +23,7 @@ def parse_metadata(folder):
         file_open = open(file, 'r')
         file_data = file_open.read()
         file_open.close()
-        audio = re.search("AudioFilename: (\w+\.\w+)", file_data).group(1)
+        audio = re.search("AudioFilename: (.+\..+)", file_data).group(1)
         audio = os.path.join(os.path.abspath(folder), audio)
         title = re.search("Title:(.+)", file_data).group(1)
         artist = re.search("Artist:(.+)", file_data).group(1)
