@@ -9,6 +9,7 @@ import create_stage
 import arrow_object
 import random
 import time
+import math
 
 NAME = "Pysu!"
 VERSION = "0.01-ALPHA"
@@ -87,11 +88,24 @@ def main():
     i = 0
     keyImages = loadKeyImages()
     arrow_images = draw_arrows(ARROWS)
-    pygame.mixer.music.play(-1)
-    t = time.clock()
+    play = False
+    time_delay = pygame.time.get_ticks()
+    song_end = ARROWS[-1].get_time()
+    clock = pygame.time.Clock()
     # Game run loop
     while 1:
         game_display.fill((0, 0, 0))
+
+        total_played = float(pygame.time.get_ticks() - time_delay) / song_end
+        print total_played
+        elipse = pygame.draw.arc(game_display, (255,255,255), (100,100,50,50), 0, total_played * math.pi * 2, 2)
+        # Play the music after 3 seconds countdown
+        if pygame.time.get_ticks() - time_delay >= 3000 and not play:
+            play = True
+            pygame.mixer.music.play()
+
+        if not pygame.mixer.get_busy:
+            return
 
         original_height, original_width, ratio = 0, 0, 0
         # Check if players wants to leave game
@@ -119,8 +133,8 @@ def main():
             arrow_image = arrow[1]
             arrow_index = arrow[0]
             width, height = arrow_image.get_size()
-            arrow_y = 595 + 192 * (pygame.time.get_ticks() - ARROWS[arrow_index].get_time()) / 1000.0 * SCROLL_SPEED / (info_object.current_h / 512.0)
-            if abs(pygame.time.get_ticks() - ARROWS[arrow_index].get_time()) > 1500: continue
+            arrow_y = 592 + 192 * (pygame.time.get_ticks() - time_delay - ARROWS[arrow_index].get_time()) / 1000.0 * SCROLL_SPEED / (info_object.current_h / 512.0)
+            if abs(pygame.time.get_ticks() - time_delay - ARROWS[arrow_index].get_time()) > 1500: continue
             arrow_x = 5 + info_object.current_w / 2 - original_width * ratio * 2 + original_width * ratio * (ARROWS[arrow[0]].get_column() - 1)
             arrow_image = pygame.transform.smoothscale(arrow_image, (int(width * ratio * 0.8), int(height * ratio * 0.8)))
             game_display.blit(arrow_image, (arrow_x,arrow_y))
@@ -128,7 +142,7 @@ def main():
         # Update game and tick game
         pygame.display.update()
         pygame.display.flip()
-        pygame.time.delay(1000/60)
+        clock.tick(60)
 
 # Call main
 if __name__ == '__main__':

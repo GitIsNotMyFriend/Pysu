@@ -38,7 +38,7 @@ def parse_metadata(folder):
             time = int(arrow_data[2])
             hit_type = int(arrow_data[3])
             hit_end = arrow_data[4]
-            new_arrow = arrow_object.arrowObject(x, y, time, hit_type, hit_end)
+            new_arrow = arrow_object.arrowObject(x, y, 3000 + time, hit_type, hit_end)
             beatmap.add_arrow(new_arrow)
 
         return beatmap
