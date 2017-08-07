@@ -30,5 +30,6 @@ to copy Stepmania's gamestyle rather than Osu!'s)
 3. Grab the beatmap folder into the game's directory inside the beatmaps folder.
 
 ## Credits
-The skin I use for the game assets is a modified version of [this skin](https://osu.ppy.sh/forum/t/512453).\n
+The skin I use for the game assets is a modified version of [this skin](https://osu.ppy.sh/forum/t/512453).
+
 I want to thank Osu!© for making readable file formats so I don't have to create my own maps for the game!
